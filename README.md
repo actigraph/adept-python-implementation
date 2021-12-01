@@ -35,7 +35,7 @@ The proposed algorithm for walking segmentation from free-living wrist-worn sens
     - 2. correlation value between raw vector magnitude accelerometry data and stride pattern template. </br></br>
 
 - Related implementations: 
-  - `python/segment_pattern.py` -- ADEPT method implementation (paper 1 above); corresponds to R's `segmentPattern()`
+  - `python/segment_pattern.py` -- <span style="color:magenta">**ADEPT method implementation (paper 1 above); corresponds to R's `adept::segmentPattern()`**</span>
   - `python/segment_pattern_utils.py`
   - `python/sliding_functions.py`</br></br>
   
@@ -61,7 +61,7 @@ The proposed algorithm for walking segmentation from free-living wrist-worn sens
 
 - Related implementations: 
 
-  - `python/segment_walking_bouts.py`
+  - `python/segment_walking_bouts.py` -- <span style="color:magenta">**ADEPT extension for  walking segmentation from free-living wrist-worn sensor accelerometry data (paper 2 above); corresponds to R's `adept::segmentWalking()`**</span>
 
 ### Explanation: (a) valid walking stride, (b) walking instance, (c) walking bout
 
