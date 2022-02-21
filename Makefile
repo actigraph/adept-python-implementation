@@ -1,10 +1,10 @@
 DUMMY: lint test
 
 lint:
-	flake8 src test
+	flake8 src tests
 	mypy src
 	pydocstyle src
 format:
 	black .
 test:
-	pytest
+	python -m pytest

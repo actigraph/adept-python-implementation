@@ -81,13 +81,13 @@ def rolling_corr(x, y, undef_val=np.nan):
     covxy = (np.convolve(x, y_REV, mode="valid") - w_vl * meanx * meany) / (w_vl - 1)
     # Unbiased estimator of sample variance
     # S^2 = \frac{\sum X^2 - \frac{(\sum X)^2}{N}}{N-1}
-    sigmax2 = (
+    sigmax2: npt.NDArray[np.float_] = (  # type: ignore
         np.convolve(x**2, win, mode="valid")
         - ((np.convolve(x, win, mode="valid")) ** 2) / w_vl
     ) / (w_vl - 1)
+
     # Correct numerical errors if any
-    if sigmax2 < 0:
-        sigmax2 = 0
+    sigmax2[sigmax2 < 0] = 0
     # Unbiased estimator of sample standard deviation
     # Note "w_vl / (w_vl-1)" gives version of vector variance consistent i.e. with R
     sigmax = np.sqrt(sigmax2)
