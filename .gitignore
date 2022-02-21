@@ -4,3 +4,8 @@
 .Ruserdata
 README.html
 adept-python-implementation.Rproj
+poetry.lock
+*__pycache__
+.idea
+.DS_Store
+

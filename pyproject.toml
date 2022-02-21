@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "pyadept"
+version = "0.1.0"
+description = "A python implementation of"
+authors = ["Marta Karass <mkaras@hsph.harvard.edu>"]
+maintainers = ["Ali Neishabouri <ali.neishabouri@theactigraph.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^1.4.1"
+numpy = "^1.22.2"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+pytest = "^7.0.1"
+flake8 = "^4.0.1"
+mypy = "^0.931"
+pydocstyle = "^6.1.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+mypy_path = "src"
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true

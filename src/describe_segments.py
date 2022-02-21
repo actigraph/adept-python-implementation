@@ -1,9 +1,11 @@
+"""Provide statistics about segments."""
 import numpy as np
 
 
 def vmc(vec):
     """
     Compute Vector Magnitude Count of a time-series.
+
     :param vec:
     :return:
     """
@@ -11,9 +13,11 @@ def vmc(vec):
 
 
 def describe_segments(sp_out, data_xyzptr, data_fs):
-    '''
-    Provides statistics (median, std, peak-to-peak, vector magnitude count)
-    of each individual pattern occurrence segmented with `segment_pattern` function.
+    """
+    Provide statistics (median, std, peak-to-peak, vector magnitude count).
+
+    Statistics are provided for each individual pattern occurrence segmented with
+    `segment_pattern` function.
 
     Uses the output of `segment_pattern` function and
     raw `xyzptr` data from which the data values corresponding to each identified
@@ -53,33 +57,20 @@ def describe_segments(sp_out, data_xyzptr, data_fs):
     20. peak-to-peak of `r` spherical coordinate of corresponding accelerometry data segment,
     21. Vector Magnitude Count,
     22. duration (expressed in seconds).
-    '''
+    """
     desc_out = [
         out_i
-        ## median
-        + [np.median(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 0])]
-        + [np.median(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 1])]
-        + [np.median(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 2])]
-        + [np.median(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 3])]
-        + [np.median(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 4])]
-        + [np.median(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 5])]
-        ## std
-        + [np.std(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 0])]
-        + [np.std(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 1])]
-        + [np.std(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 2])]
-        + [np.std(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 3])]
-        + [np.std(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 4])]
-        + [np.std(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 5])]
-        ## ptp
-        + [np.ptp(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 0])]
-        + [np.ptp(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 1])]
-        + [np.ptp(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 2])]
-        + [np.ptp(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 3])]
-        + [np.ptp(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 4])]
-        + [np.ptp(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 5])]
-        ## VMC
-        + [vmc(data_xyzptr[(out_i[0]):(out_i[0] + out_i[1]), 5])]
-        ## stride duration
+        # median
+        + [np.median(data_xyzptr[(out_i[0]) :
+                                 (out_i[0] + out_i[1]), i]) for i in range(6)]
+        # std
+        + [np.std(data_xyzptr[(out_i[0]) : (out_i[0] + out_i[1]), i]) for i in range(6)]
+        # ptp
+        + [np.ptp(data_xyzptr[(out_i[0]) : (out_i[0] + out_i[1]), i]) for i in range(6)]
+        # VMC
+        + [vmc(data_xyzptr[(out_i[0]) : (out_i[0] + out_i[1]), 5])]
+        # stride duration
         + [out_i[1] / data_fs]
-        for out_i in sp_out]
+        for out_i in sp_out
+    ]
     return desc_out
