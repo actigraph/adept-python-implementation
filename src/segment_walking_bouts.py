@@ -1,23 +1,31 @@
+"""Determine whether a segment is part of a walking bout."""
 from copy import copy
 
 import numpy as np
-import pandas as pd
+from numpy import typing as npt
+
+from sliding_functions import rolling_mean, rolling_diff1
+from src.segment_pattern_utils import rank_chunks_of_ones
+
 
 def segment_walking_bouts(
-        spdesc_df,
-        sim_MIN_stride=0.85,
-        sim_MIM_bridge=0.75,
-        dur_MIN=0.85,
-        dur_MAX=1.4,
-        ptp_r_MIN=0.4,
-        ptp_r_MAX=3.0,
-        vmc_r_MIN=0.1,
-        vmc_r_MAX=0.8,
-        mean_abs_diff_med_p_MAX=0.2,
-        mean_abs_diff_med_t_MAX=0.2,
-        mean_abs_diff_dur_MAX=0.25,
-        keep_valid_walking_bout_only=True):
-    '''
+    spdesc_df,
+    sim_MIN_stride=0.85,
+    sim_MIM_bridge=0.75,
+    dur_MIN=0.85,
+    dur_MAX=1.4,
+    ptp_r_MIN=0.4,
+    ptp_r_MAX=3.0,
+    vmc_r_MIN=0.1,
+    vmc_r_MAX=0.8,
+    mean_abs_diff_med_p_MAX=0.2,
+    mean_abs_diff_med_t_MAX=0.2,
+    mean_abs_diff_dur_MAX=0.25,
+    keep_valid_walking_bout_only=True,
+):
+    """
+    Determine whether a segment is part of a walking bout.
+
     Takes pandas.DataFrame with stride pattern
     segmentation results (output of `describe_segments` function after conversion
     to pandas.DataFrame) and for each stride identified,
@@ -123,69 +131,92 @@ def segment_walking_bouts(
     :return: (pandas.DataFrame) Data frame with stride pattern
     segmentation results (output of `describe_segments` function) extended
     by two additional columns: `'walking_instance_id'` and `'walking_bout_id'`.
-    '''
-    ## Define condition for a segmented pattern to be a potential WALKING STRIDE
-    cond_stride_0 = \
-        (spdesc_df['ptp_r'] >= ptp_r_MIN) & \
-        (spdesc_df['ptp_r'] <= ptp_r_MAX) & \
-        (spdesc_df['vmc_r'] >= vmc_r_MIN) & \
-        (spdesc_df['vmc_r'] <= vmc_r_MAX) & \
-        (spdesc_df['dur'] >= dur_MIN) & \
-        (spdesc_df['dur'] <= dur_MAX)
-    cond_stride = np.array(cond_stride_0 & (spdesc_df['sim'] >= sim_MIN_stride)).astype('int')
-    cond_stride_bridge = np.array(cond_stride_0 & (spdesc_df['sim'] >= sim_MIM_bridge)).astype('int')
+    """
+    # Define condition for a segmented pattern to be a potential WALKING STRIDE
+    cond_stride_0 = (
+        (spdesc_df["ptp_r"] >= ptp_r_MIN)
+        & (spdesc_df["ptp_r"] <= ptp_r_MAX)
+        & (spdesc_df["vmc_r"] >= vmc_r_MIN)
+        & (spdesc_df["vmc_r"] <= vmc_r_MAX)
+        & (spdesc_df["dur"] >= dur_MIN)
+        & (spdesc_df["dur"] <= dur_MAX)
+    )
+    cond_stride: npt.NDArray[np.int_] = np.array(
+        cond_stride_0 & (spdesc_df["sim"] >= sim_MIN_stride)).astype("int")
+    cond_stride_bridge: npt.NDArray[np.int_] = np.array(
+        cond_stride_0 & (spdesc_df["sim"] >= sim_MIM_bridge)
+    ).astype("int")
 
-    ## Define conditions for a potential WALKING STRIDE to be a part of a WALKING INSTANCE
-    cond_stride_mean3 = (rolling_mean(np.array(cond_stride), w_vl=3, undef_val=0) > 0.9)
-    med_p_diff1 = np.abs(rolling_diff1(np.array(spdesc_df['med_p']), undef_val=0))
-    med_t_diff1 = np.abs(rolling_diff1(np.array(spdesc_df['med_t']), undef_val=0))
-    dur_diff1 = np.abs(rolling_diff1(np.array(spdesc_df['dur']), undef_val=0))
+    # Define conditions for a potential WALKING STRIDE to be a part of a WALKING INSTANCE
+    cond_stride_mean3 = rolling_mean(np.array(cond_stride), w_vl=3, undef_val=0) > 0.9
+    med_p_diff1 = np.abs(rolling_diff1(np.array(spdesc_df["med_p"]), undef_val=0))
+    med_t_diff1 = np.abs(rolling_diff1(np.array(spdesc_df["med_t"]), undef_val=0))
+    dur_diff1 = np.abs(rolling_diff1(np.array(spdesc_df["dur"]), undef_val=0))
     cond_med_p_diff1_mean2 = (
-            rolling_mean(med_p_diff1, w_vl=2, undef_val=mean_abs_diff_med_p_MAX) < mean_abs_diff_med_p_MAX)
+        rolling_mean(med_p_diff1, w_vl=2, undef_val=mean_abs_diff_med_p_MAX)
+        < mean_abs_diff_med_p_MAX
+    )
     cond_med_t_diff1_mean2 = (
-            rolling_mean(med_t_diff1, w_vl=2, undef_val=mean_abs_diff_med_t_MAX) < mean_abs_diff_med_t_MAX)
-    cond_dur_diff1_mean2 = (rolling_mean(dur_diff1, w_vl=2, undef_val=mean_abs_diff_dur_MAX) < mean_abs_diff_dur_MAX)
-    cond_wi = cond_stride_mean3 & cond_med_p_diff1_mean2 & cond_med_t_diff1_mean2 & cond_dur_diff1_mean2
+        rolling_mean(med_t_diff1, w_vl=2, undef_val=mean_abs_diff_med_t_MAX)
+        < mean_abs_diff_med_t_MAX
+    )
+    cond_dur_diff1_mean2 = (
+        rolling_mean(dur_diff1, w_vl=2, undef_val=mean_abs_diff_dur_MAX)
+        < mean_abs_diff_dur_MAX
+    )
+    cond_wi = (
+        cond_stride_mean3
+        & cond_med_p_diff1_mean2
+        & cond_med_t_diff1_mean2
+        & cond_dur_diff1_mean2
+    )
 
-    ## Define walking instance (wi) ID
+    # Define walking instance (wi) ID
     wi_id0 = rank_chunks_of_ones(cond_wi)
-    wi_id_concat = np.column_stack((wi_id0, np.roll(wi_id0, 1), np.roll(wi_id0, 2)))
+    wi_id_concat: npt.NDArray[np.float_] = np.column_stack((wi_id0, np.roll(wi_id0, 1),
+                                                            np.roll(wi_id0, 2)))
     wi_id_concat[np.isnan(wi_id_concat)] = -1
     wi_id = np.nanmax(wi_id_concat, axis=1)
     wi_id[wi_id < 0] = np.nan
-    ## Define walking bout (wb) ID
+    # Define walking bout (wb) ID
     wi_id_CPY = copy(wi_id)
     wb_id = copy(wi_id)
     wi_id_unq = np.sort(np.unique(wi_id[~np.isnan(wi_id)]))
     for i in range(len(wi_id_unq) - 1):
-        ## Current walking instance
+        # Current walking instance
         id_unq = wi_id_unq[i]
         id_unq_idxMAX = np.max(np.where(wi_id_CPY == id_unq)[0])
-        ## Next walking instance
+        # Next walking instance
         id_unq_next = wi_id_unq[i + 1]
         id_unq_next_idx = np.where(wi_id_CPY == id_unq_next)[0]
         id_unq_next_idxMIN = np.min(id_unq_next_idx)
         id_unq_next_idxMAX = np.max(id_unq_next_idx)
-        ## no break or 1-element break between the two meighbouring walking instances
+        # no break or 1-element break between the two meighbouring walking instances
         bridge_len = id_unq_next_idxMIN - id_unq_idxMAX - 1
         cond_join_1 = bridge_len <= 1
-        ## 2-element break break between the two meighbouring walking instances
-        cond_join_2 = (bridge_len == 2) & (np.mean(cond_stride_bridge[(id_unq_idxMAX + 1):(id_unq_next_idxMIN)]) > 0)
-        ## 3-element break break between the two meighbouring walking instances
-        cond_join_3 = (bridge_len == 3) & (np.mean(cond_stride_bridge[(id_unq_idxMAX + 1):(id_unq_next_idxMIN)]) > 0.5)
-        ## If any of the conditions is matched, join the two meighbouring walking instances onto one walking bout
-        if (cond_join_1 | cond_join_2 | cond_join_3):
-            ## Update walking bouts
-            wb_id[id_unq_idxMAX:(id_unq_next_idxMAX + 1)] = id_unq
-            ## Update walking instances
-            wi_id_CPY[id_unq_next_idxMIN:(id_unq_next_idxMAX + 1)] = id_unq
+        # 2-element break break between the two meighbouring walking instances
+        cond_join_2 = (bridge_len == 2) & (
+            np.mean(cond_stride_bridge[(id_unq_idxMAX + 1) : (id_unq_next_idxMIN)]) > 0
+        )
+        # 3-element break break between the two meighbouring walking instances
+        cond_join_3 = (bridge_len == 3) & (
+            np.mean(cond_stride_bridge[(id_unq_idxMAX + 1) : (id_unq_next_idxMIN)])
+            > 0.5
+        )
+        # If any of the conditions is matched, join the two meighbouring walking
+        # instances onto one walking bout
+        if cond_join_1 | cond_join_2 | cond_join_3:
+            # Update walking bouts
+            wb_id[id_unq_idxMAX : (id_unq_next_idxMAX + 1)] = id_unq
+            # Update walking instances
+            wi_id_CPY[id_unq_next_idxMIN : (id_unq_next_idxMAX + 1)] = id_unq
             wi_id_unq[i + 1] = wi_id_unq[i]
 
-    ## Assign columns to pandas data frame
-    spdesc_df['walking_instance_id'] = wi_id
-    spdesc_df['walking_bout_id'] = wb_id
-    ## Keep only those for which walking bout is not np.nan
+    # Assign columns to pandas data frame
+    spdesc_df["walking_instance_id"] = wi_id
+    spdesc_df["walking_bout_id"] = wb_id
+    # Keep only those for which walking bout is not np.nan
     if keep_valid_walking_bout_only:
-        spdesc_df = spdesc_df[~np.isnan(spdesc_df['walking_bout_id'])]
-    ## Return Pandas dataframe
-    return (spdesc_df)
+        spdesc_df = spdesc_df[~np.isnan(spdesc_df["walking_bout_id"])]
+    # Return Pandas dataframe
+    return spdesc_df
