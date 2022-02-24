@@ -34,7 +34,7 @@ def test_suite_1_example_a():
     out.sort(key=lambda x: int(x[0]))
     # Check pattern start index
     res = [row[0] for row in out]
-    exp = [1, 101, 201, 301, 400, 500, 600, 700, 800, 900]
+    exp = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900]
     npt.assert_equal(res, exp)
     # Check pattern duration
     res = [row[1] for row in out]
