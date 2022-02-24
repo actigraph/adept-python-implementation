@@ -89,7 +89,7 @@ def wrapper_identify_walking(hdf5_fpath, templ_fpath, results_partial_dir):
 
             # Save results to file
             results_partial_fname = (
-                    results_partial_fname_prefix + "_dad24_" + str(dad24_i) + ".npy"
+                results_partial_fname_prefix + "_dad24_" + str(dad24_i) + ".npy"
             )
             results_partial_fpath = os.path.join(
                 results_partial_dir, results_partial_fname

@@ -142,7 +142,8 @@ def segment_walking_bouts(
         & (spdesc_df["dur"] <= dur_MAX)
     )
     cond_stride: npt.NDArray[np.int_] = np.array(
-        cond_stride_0 & (spdesc_df["sim"] >= sim_MIN_stride)).astype("int")
+        cond_stride_0 & (spdesc_df["sim"] >= sim_MIN_stride)
+    ).astype("int")
     cond_stride_bridge: npt.NDArray[np.int_] = np.array(
         cond_stride_0 & (spdesc_df["sim"] >= sim_MIM_bridge)
     ).astype("int")
@@ -173,8 +174,9 @@ def segment_walking_bouts(
 
     # Define walking instance (wi) ID
     wi_id0 = rank_chunks_of_ones(cond_wi)
-    wi_id_concat: npt.NDArray[np.float_] = np.column_stack((wi_id0, np.roll(wi_id0, 1),
-                                                            np.roll(wi_id0, 2)))
+    wi_id_concat: npt.NDArray[np.float_] = np.column_stack(
+        (wi_id0, np.roll(wi_id0, 1), np.roll(wi_id0, 2))
+    )
     wi_id_concat[np.isnan(wi_id_concat)] = -1
     wi_id = np.nanmax(wi_id_concat, axis=1)
     wi_id[wi_id < 0] = np.nan
