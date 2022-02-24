@@ -1,9 +1,9 @@
 DUMMY: lint test
 
 lint:
-	flake8 src tests
-	mypy src
-	pydocstyle src
+	flake8 pyadept tests
+	mypy pyadept
+	pydocstyle pyadept
 format:
 	black .
 test:

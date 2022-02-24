@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.testing as npt
 
-from src.segment_pattern import segment_pattern, interp_vec
+from pyadept.segment_pattern import segment_pattern, interp_vec
 
 
 # [If ran from the notebook]

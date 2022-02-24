@@ -5,7 +5,7 @@ import numpy.testing as npt
 import pandas as pd
 import pytest
 
-from src.sliding_functions import rolling_mean, rolling_corr, rolling_smooth
+from pyadept.sliding_functions import rolling_mean, rolling_corr, rolling_smooth
 
 
 def conventional_mean(x, W):

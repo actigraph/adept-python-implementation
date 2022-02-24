@@ -4,8 +4,8 @@ from copy import copy
 import numpy as np
 from numpy import typing as npt
 
-from sliding_functions import rolling_mean, rolling_diff1
-from src.segment_pattern_utils import rank_chunks_of_ones
+from pyadept.sliding_functions import rolling_mean, rolling_diff1
+from pyadept.segment_pattern import rank_chunks_of_ones
 
 
 def segment_walking_bouts(

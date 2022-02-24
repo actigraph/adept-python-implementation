@@ -3,9 +3,10 @@ from copy import copy
 from typing import List
 
 import numpy as np
-from numpy import typing as npt
 import pandas as pd
-from src.sliding_functions import rolling_corr, rolling_smooth
+from numpy import typing as npt
+
+from pyadept.sliding_functions import rolling_corr, rolling_smooth
 
 
 def dstack_product(x, y):

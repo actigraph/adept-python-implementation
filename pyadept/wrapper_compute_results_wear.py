@@ -19,8 +19,8 @@ import sys
 from typing import List
 
 import numpy as np
-from numpy import typing as npt
 from actigrapy.algorithms.wear_detection.wear_data.wear_data import WearData
+from numpy import typing as npt
 
 # This script contains function which computes information on wear time
 #

@@ -8,9 +8,9 @@ from actigrapy.actigraphy_data.activity_data import RawActivityData
 
 # Hard-coded (thought to be always fixed for it) segmentation params,
 # likely to be read from some external params file later.
-from src.describe_segments import describe_segments
-from src.segment_pattern import segment_pattern_wrap
-from src.segment_pattern_utils import stride_templ_df_to_array
+from pyadept.describe_segments import describe_segments
+from pyadept.segment_pattern import segment_pattern_wrap
+from pyadept.segment_pattern import stride_templ_df_to_array
 
 x_slice_vl = 6000
 x_sim_smooth_w = 0.2

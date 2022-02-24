@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyadept"
-version = "0.1.0"
+version = "0.1.1"
 description = "A python implementation of"
 authors = ["Marta Karass <mkaras@hsph.harvard.edu>"]
 maintainers = ["Ali Neishabouri <ali.neishabouri@theactigraph.com>"]
