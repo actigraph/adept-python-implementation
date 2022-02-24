@@ -3,9 +3,10 @@ from copy import copy
 from typing import List
 
 import numpy as np
-from numpy import typing as npt
 import pandas as pd
-from src.sliding_functions import rolling_corr, rolling_smooth
+from numpy import typing as npt
+
+from pyadept.sliding_functions import rolling_corr, rolling_smooth
 
 
 def dstack_product(x, y):
@@ -252,7 +253,7 @@ def segment_pattern(
             if np.isnan(x_ftune_smooth_w)
             else rolling_smooth(x, x_ftune_smooth_w, x_fs)
         )
-        # Define neighbourhod within which we fine-tune pattern locations
+        # Define neighbourhood within which we fine-tune pattern locations
         x_ftune_nbh_vl = int(x_ftune_nbh_w * x_fs)
         interp_vl_min = min(pattern_vl_grid)
         interp_vl_max = max(pattern_vl_grid)

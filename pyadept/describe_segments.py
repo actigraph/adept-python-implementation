@@ -61,8 +61,10 @@ def describe_segments(sp_out, data_xyzptr, data_fs):
     desc_out = [
         out_i
         # median
-        + [np.median(data_xyzptr[(out_i[0]) :
-                                 (out_i[0] + out_i[1]), i]) for i in range(6)]
+        + [
+            np.median(data_xyzptr[(out_i[0]) : (out_i[0] + out_i[1]), i])
+            for i in range(6)
+        ]
         # std
         + [np.std(data_xyzptr[(out_i[0]) : (out_i[0] + out_i[1]), i]) for i in range(6)]
         # ptp
