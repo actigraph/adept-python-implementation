@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "A python implementation of"
 authors = ["Marta Karass <mkaras@hsph.harvard.edu>"]
 maintainers = ["Ali Neishabouri <ali.neishabouri@theactigraph.com>"]
+repository = "https://github.com/actigraph/pyadept"
 license = "GPL-3.0-or-later"
 readme = "README.md"
 
