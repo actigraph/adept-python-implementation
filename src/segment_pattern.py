@@ -252,7 +252,7 @@ def segment_pattern(
             if np.isnan(x_ftune_smooth_w)
             else rolling_smooth(x, x_ftune_smooth_w, x_fs)
         )
-        # Define neighbourhod within which we fine-tune pattern locations
+        # Define neighbourhood within which we fine-tune pattern locations
         x_ftune_nbh_vl = int(x_ftune_nbh_w * x_fs)
         interp_vl_min = min(pattern_vl_grid)
         interp_vl_max = max(pattern_vl_grid)
