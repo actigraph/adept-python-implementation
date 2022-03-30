@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pyadept"
-version = "0.1.1"
-description = "A python implementation of"
+version = "0.1.2"
+description = "A python implementation of the ADEPT algorithm."
 authors = ["Marta Karass <mkaras@hsph.harvard.edu>"]
 maintainers = ["Ali Neishabouri <ali.neishabouri@theactigraph.com>"]
 repository = "https://github.com/actigraph/pyadept"
@@ -9,9 +9,9 @@ license = "GPL-3.0-or-later"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
-pandas = "^1.4.1"
-numpy = "^1.22.2"
+python = ">=3.7.1,<3.11"
+pandas = ">=1.2.1"
+numpy = ">=1.20"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
