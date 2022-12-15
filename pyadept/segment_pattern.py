@@ -12,8 +12,8 @@ from pyadept.sliding_functions import rolling_corr, rolling_smooth
 def dstack_product(x, y):
     """Compute a 2D array whose rows consists of combination of all pairs of elements.
 
-    :param x: (numpy.array) An arry.
-    :param y: (numpy.array) An arry.
+    :param x: (numpy.array) An array.
+    :param y: (numpy.array) An array.
     :return: A 2D array.
     """
     return np.dstack(np.meshgrid(x, y)).reshape(-1, 2)
@@ -133,7 +133,7 @@ def do_ftune(tau_i, T_i, x_ftune, nbhwing_vl, interp_vl_min, interp_vl_max):
     # Mask to assure the potential updated pattern location corresponds to a
     # pattern which duration is within allowed pattern duration range
     tau_prod: npt.NDArray[np.float_] = dstack_product(tau_2_nbh, tau_1_nbh)
-    tau_mask: npt.NDArray[np.float_] = tau_prod[:, 0] - tau_prod[:, 1] + 1
+    tau_mask: npt.NDArray[np.int_] = tau_prod[:, 0] - tau_prod[:, 1] + 1
     tau_mask = (tau_mask >= interp_vl_min) & (tau_mask <= interp_vl_max)
     # Identify fine-tuned location which corresponds to signal magnitude peaks
     nbh_x_prod = dstack_product(x_ftune[tau_2_nbh], x_ftune[tau_1_nbh])

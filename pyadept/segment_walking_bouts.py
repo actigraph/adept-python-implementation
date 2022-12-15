@@ -187,25 +187,25 @@ def segment_walking_bouts(
     for i in range(len(wi_id_unq) - 1):
         # Current walking instance
         id_unq = wi_id_unq[i]
-        id_unq_idxMAX = np.max(np.where(wi_id_CPY == id_unq)[0])
+        id_unq_idxMAX = int(np.max(np.where(wi_id_CPY == id_unq)[0]))
         # Next walking instance
         id_unq_next = wi_id_unq[i + 1]
         id_unq_next_idx = np.where(wi_id_CPY == id_unq_next)[0]
-        id_unq_next_idxMIN = np.min(id_unq_next_idx)
-        id_unq_next_idxMAX = np.max(id_unq_next_idx)
-        # no break or 1-element break between the two meighbouring walking instances
+        id_unq_next_idxMIN = int(np.min(id_unq_next_idx))
+        id_unq_next_idxMAX = int(np.max(id_unq_next_idx))
+        # no break or 1-element break between the two neighbouring walking instances
         bridge_len = id_unq_next_idxMIN - id_unq_idxMAX - 1
         cond_join_1 = bridge_len <= 1
-        # 2-element break break between the two meighbouring walking instances
+        # 2-element break break between the two neighbouring walking instances
         cond_join_2 = (bridge_len == 2) & (
-            np.mean(cond_stride_bridge[(id_unq_idxMAX + 1) : (id_unq_next_idxMIN)]) > 0
+                np.mean(cond_stride_bridge[(id_unq_idxMAX + 1): id_unq_next_idxMIN]) > 0
         )
-        # 3-element break break between the two meighbouring walking instances
+        # 3-element break break between the two neighbouring walking instances
         cond_join_3 = (bridge_len == 3) & (
-            np.mean(cond_stride_bridge[(id_unq_idxMAX + 1) : (id_unq_next_idxMIN)])
+            np.mean(cond_stride_bridge[(id_unq_idxMAX + 1): id_unq_next_idxMIN])
             > 0.5
         )
-        # If any of the conditions is matched, join the two meighbouring walking
+        # If any of the conditions is matched, join the two neighbouring walking
         # instances onto one walking bout
         if cond_join_1 | cond_join_2 | cond_join_3:
             # Update walking bouts
