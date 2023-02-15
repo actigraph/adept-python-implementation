@@ -26,7 +26,7 @@ def rolling_mean(x, w_vl, undef_val=np.nan):
         output array equals the length of `x` array.
     """
     out = np.convolve(x, np.ones(w_vl) / w_vl, mode="valid")
-    return np.concatenate((out, [undef_val] * (w_vl - 1)))
+    return np.concatenate([out, [undef_val] * (w_vl - 1)])
 
 
 def rolling_diff1(x, undef_val=np.nan):
@@ -47,7 +47,7 @@ def rolling_diff1(x, undef_val=np.nan):
     # "A positive derivative means that the function is increasing".
     filter_vec: npt.NDArray[np.int_] = np.array([1, -1])
     out = np.convolve(x, filter_vec, mode="valid")
-    return np.concatenate((out, [undef_val] * 1))
+    return np.concatenate([out, [undef_val] * 1])
 
 
 def rolling_corr(x, y, undef_val=np.nan):
@@ -82,7 +82,7 @@ def rolling_corr(x, y, undef_val=np.nan):
     # Unbiased estimator of sample variance
     # S^2 = \frac{\sum X^2 - \frac{(\sum X)^2}{N}}{N-1}
     sigmax2: npt.NDArray[np.float_] = (  # type: ignore
-        np.convolve(x**2, win, mode="valid")
+        np.convolve(x ** 2, win, mode="valid")
         - ((np.convolve(x, win, mode="valid")) ** 2) / w_vl
     ) / (w_vl - 1)
 
@@ -101,7 +101,7 @@ def rolling_corr(x, y, undef_val=np.nan):
     # sigmax or sigmay being numerical 0
     corxy[~np.isfinite(corxy)] = 0
 
-    return np.concatenate((corxy, [undef_val] * (w_vl - 1)))
+    return np.concatenate([corxy, [undef_val] * (w_vl - 1)])
 
 
 def rolling_smooth(x, w, x_fs=1, replace_undef_with_closest_val=True):
