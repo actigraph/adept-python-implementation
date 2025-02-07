@@ -1,29 +1,35 @@
-[tool.poetry]
+[project]
 name = "pyadept"
 version = "0.1.4"
 description = "A python implementation of the ADEPT algorithm."
-authors = ["Marta Karass <mkaras@hsph.harvard.edu>"]
-maintainers = ["Ali Neishabouri <ali.neishabouri@theactigraph.com>"]
-repository = "https://github.com/actigraph/pyadept"
-license = "GPL-3.0-or-later"
+authors = [{ name = "Marta Karass", email = "mkaras@hsph.harvard.edu" }]
+requires-python = ">=3.8.1,<3.13"
 readme = "README.md"
+license = "GPL-3.0-or-later"
+maintainers = [{ name = "Ali Neishabouri", email = "ali.neishabouri@theactigraph.com" }]
+dependencies = [
+    "pandas>=1.0.5",
+    "numpy>=1.20",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.8.1,<3.12"
-pandas = ">=1.0.5"
-numpy = ">=1.20"
+[project.urls]
+Repository = "https://github.com/actigraph/pyadept"
 
-[tool.poetry.dev-dependencies]
-black = "^22.12.0"
-mypy = "^0.991"
-flake8 = "^6.0.0"
-pydocstyle = "^6.1.1"
-pytest = "^7.2.0"
-
+[dependency-groups]
+dev = [
+    "black>=22.12.0,<23",
+    "mypy>=0.991,<0.992",
+    "flake8>=6.0.0,<7",
+    "pydocstyle>=6.1.1,<7",
+    "pytest>=7.2.0,<8",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
 
 [tool.mypy]
 mypy_path = "src"
