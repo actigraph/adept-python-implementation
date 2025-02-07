@@ -174,7 +174,7 @@ def segment_walking_bouts(
 
     # Define walking instance (wi) ID
     wi_id0 = rank_chunks_of_ones(cond_wi)
-    wi_id_concat: npt.NDArray[np.float_] = np.column_stack(
+    wi_id_concat: npt.NDArray[float] = np.column_stack(
         (wi_id0, np.roll(wi_id0, 1), np.roll(wi_id0, 2))
     )
     wi_id_concat[np.isnan(wi_id_concat)] = -1

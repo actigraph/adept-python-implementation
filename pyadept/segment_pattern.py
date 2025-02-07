@@ -115,7 +115,7 @@ def rank_chunks_of_ones(arr):
     m = np.r_[False, arr.astype(bool), False]
     idx = np.flatnonzero(m[:-1] != m[1:])
     ll = idx[1::2] - idx[::2]
-    out: npt.NDArray[np.float_] = np.full(len(arr), np.nan, dtype=float)
+    out: npt.NDArray[float] = np.full(len(arr), np.nan, dtype=float)
     out[arr != 0] = np.repeat(np.arange(len(ll)), ll)
     return out
 
@@ -124,15 +124,15 @@ def do_ftune(tau_i, T_i, x_ftune, nbhwing_vl, interp_vl_min, interp_vl_max):
     """Finetune."""
     tau_1 = tau_i
     tau_2 = tau_1 + T_i - 1
-    tau_1_nbh: npt.NDArray[np.float_] = np.array(
+    tau_1_nbh: npt.NDArray[float] = np.array(
         range(max(0, tau_1 - nbhwing_vl), min(tau_2, tau_1 + nbhwing_vl + 1))
     )
-    tau_2_nbh: npt.NDArray[np.float_] = np.array(
+    tau_2_nbh: npt.NDArray[float] = np.array(
         range(max(0, tau_2 - nbhwing_vl), min(len(x_ftune), tau_2 + nbhwing_vl + 1))
     )
     # Mask to assure the potential updated pattern location corresponds to a
     # pattern which duration is within allowed pattern duration range
-    tau_prod: npt.NDArray[np.float_] = dstack_product(tau_2_nbh, tau_1_nbh)
+    tau_prod: npt.NDArray[float] = dstack_product(tau_2_nbh, tau_1_nbh)
     tau_mask: npt.NDArray[np.int_] = tau_prod[:, 0] - tau_prod[:, 1] + 1
     tau_mask = (tau_mask >= interp_vl_min) & (tau_mask <= interp_vl_max)
     # Identify fine-tuned location which corresponds to signal magnitude peaks
@@ -223,7 +223,7 @@ def segment_pattern(
     # Each 2D array corresponds to particular potential pattern vector length
     templ_rescaled = []
     for vl_i in pattern_vl_grid:
-        item_tmp: npt.NDArray[np.float_] = np.stack(
+        item_tmp: npt.NDArray[float] = np.stack(
             [interp_scale_vec(templ_i, vl_i) for templ_i in templ_array]
         )
         templ_rescaled.append(item_tmp)
@@ -232,7 +232,7 @@ def segment_pattern(
         copy(x) if np.isnan(x_sim_smooth_w) else rolling_smooth(x, x_sim_smooth_w, x_fs)
     )
     # Compute similarity matrix between x and template(s)
-    simmat: npt.NDArray[np.float_] = np.stack(
+    simmat: npt.NDArray[float] = np.stack(
         [
             np.amax(
                 np.stack(
